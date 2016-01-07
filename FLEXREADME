@@ -1,0 +1,27 @@
+Notes on Flex.
+
+Options:
+8bit - flex will generate a scanner capable of recognizing 8bit characters.  
+ecs  - Create equivalence classes where possible. This reduces table size.
+debug - Put the scanner into debug mode which I believe is the equivalent of verbose mode
+for rule matching.
+nodefault - prevents the "default rule" from being used. This causes inputs which don't
+match the scanner rules to generate errors rather than being printed to stdout.
+noyywrap - causes the scanner to behave as though the yywrap() function has returned 1
+in all cases. Check the flex man page for an explanation of EOF handling behavior and
+its relationship with yywrap.
+perf-report - flex generates a report to stderr regarding features of the
+implementation which will have a significant impact on scanner performance.
+verbose - flex will print a summary report to stderr with statistics about the scanner
+generated
+warn - "warn about certain things. In particular, if the default rule can be matched but no default rule has been given, the flex will warn you."
+
+Macros:
+YY_USER_ACTION - Defines behavior to be performed before a matched rule's action.
+
+Definitions:
+
+Give names to things. Definitions always have the form:
+name definition
+
+

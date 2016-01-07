@@ -1,0 +1,12 @@
+cme stuff
+
+command line options:
+-I /path/to/include Includes the provided path for use when searching for headers
+-o exec_name Set the name of the output binary
+
+TODO:
+- implement flex scanner
+- define flex utility functions
+- implement bison parser
+- define bison utility functions
+- either port or discard auxlib from Parsing
