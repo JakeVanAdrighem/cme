@@ -28,9 +28,9 @@ BADIDENT      ({TOK_INTCON}+{TOK_IDENT})
 
 %%
 
-"#".*  { scanner_include(); }
-[ \t]+ { IGNORE (white space) }
-\n     { scanner_newline(); }
+"#include".*  { scanner_include(); }
+[ \t]+        { IGNORE (white space) }
+\n            { scanner_newline(); }
 
 "void"          { return yylval_token (TOK_VOID);}
 "bool"          { return yylval_token (TOK_BOOL);}
@@ -81,6 +81,8 @@ BADIDENT      ({TOK_INTCON}+{TOK_IDENT})
 {BADIDENT}      { scanner_badtoken(yytext);}
 {BADCHAR}       { scanner_badtoken(yytext);}
 {BADSTRING}     { scanner_badtoken(yytext);}
+
+<<EOF>>         {scanner_eof();}
 
 .               { scanner_badtoken(yytext);}
 
