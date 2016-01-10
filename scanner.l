@@ -1,5 +1,7 @@
 %{
 
+#include "scanner.h"
+
 #define YY_USER_ACTION { scanner_useraction(); }
 #define IGNORE(THING) { }
 
