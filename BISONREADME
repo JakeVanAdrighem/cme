@@ -1,0 +1,20 @@
+Notes on bison:
+
+Bison grammar files appear to have a format very similar to that of flex.
+Definitions or something similar followed by rules of the language.
+
+options:
+
+%debug - set the parser macro YYDEBUG to be 1 if not already set.
+This enables compilation of "debugging facilities".
+
+%defines - Creates a header file containing macro definitions of
+the token type names. Generally allows for external definition of
+yylex.
+
+%error-verbose - Pretty obvious?
+
+%token-table - Generates an array of token names in the parser file.
+Maps token code numbers to token names in the array yytname
+
+%verbose - "Write an extra output file containing verbose descriptions of the parser states and what is done for each type of look-ahead token in that state." 

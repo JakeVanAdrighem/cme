@@ -3,10 +3,7 @@
 int scan_linenr = 1;
 int scan_offset = 0;
 bool scan_echo = false;
-// list of names of files included in this TU. Hardcoded with a limit of 1028
-// for now.
 char *includelist[1024];
-// counts the number of included files as well as tracking the slot used
 int includecount = 0;
 
 void scanner_include() {
@@ -48,5 +45,5 @@ void scanner_newline(void) {
 void scanner_useraction(void) { scan_offset += yyleng; }
 
 void scanner_badtoken(char *lexeme) {
-  // TODO: Implement me with printing the names of the offending files
+  // TODO: Say that this token was bad
 }
