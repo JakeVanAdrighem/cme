@@ -1,0 +1,28 @@
+The process described below is primarily defined by
+the C standard N1548.
+
+Compilation Process:
+	Clean up Multi-byte chars
+	Clean up newlines(Leave the last newline before EOF)
+	lex(Scan)
+	Preprocess
+	parse
+	load into "IR" form(??? isn't this just the second half of parsing)
+	(maybe optimize)
+	lower instructions
+	pass off to linker
+	DONE
+
+Different components:
+TranslationUnit
+	Globals
+	Functions
+		Blocks
+			Instructions
+				Operands
+
+Data hierarchy should probably be defined
+in a bottom up manner. 
+
+Components(operands) of instructions should
+have some structure to generalize them.
