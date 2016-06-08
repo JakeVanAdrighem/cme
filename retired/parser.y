@@ -39,14 +39,14 @@
 
 %%
 
-start	: program			{ yyparse_astree = $1; };
+start	: program			{ yyparse_ast = $1; };
 
 program : program structdef { $$ = adopt1($1, $2); }
 		| program function  { $$ = adopt1($1, $2); }
 		| program statement { $$ = adopt1($1, $2); }
 		| program error '}' { $$ = $1; }
 		| program error ';' { $$ = $1; }
-		| 					{ $$ = new_empty_astree(); }
+		| 					{ $$ = new_empty_ast(); }
 		;
 
 
@@ -56,4 +56,17 @@ basetype	: TOK_VOID		{$$ = $1;}
 			| TOK_CHAR		{$$ = $1;}
 			| TOK_INT		{$$ = $1;}
 			| TOK_STRING	{$$ = $1;}
-			| TOK_IDENT		{$$ = 
+			| TOK_IDENT		{$$ = changesymbol($1, TOK_TYPEID);}
+			;
+
+structdef   : TOK_STRUCT TOK_IDENT '{' structfields '}' ';'
+			;
+
+structfields: structfields structfield	{ }
+			| structfield				{$$ =  }
+			; 
+
+structfield : basetype TOK_IDENT ';'			{ }
+			| basetype TOK_ARRAY TOK_IDENT ';'	{ }
+			| 
+			;

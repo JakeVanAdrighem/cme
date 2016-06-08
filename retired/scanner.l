@@ -34,21 +34,26 @@ BADIDENT      ({TOK_INTCON}+{TOK_IDENT})
 [ \t]+        { IGNORE (white space) }
 \n            { scanner_newline(); }
 
-"void"          { return yylval_token (TOK_VOID);}
-"bool"          { return yylval_token (TOK_BOOL);}
-"char"          { return yylval_token (TOK_CHAR);}
+/* Basic Data Types */
 "int"           { return yylval_token (TOK_INT);}
-"string"        { return yylval_token (TOK_STRING);}
+"char"          { return yylval_token (TOK_CHAR);}
+"bool"          { return yylval_token (TOK_BOOL);}
+"void"          { return yylval_token (TOK_VOID);}
+
+/* Objects */
 "struct"        { return yylval_token (TOK_STRUCT);}
+
+/* Control Flow */
 "if"            { return yylval_token (TOK_IF);}
 "else"          { return yylval_token (TOK_ELSE);}
 "while"         { return yylval_token (TOK_WHILE);}
+"for"			{ return yylval_token (TOK_FOR);}
 "return"        { return yylval_token (TOK_RETURN);}
+
+
 "false"         { return yylval_token (TOK_FALSE);}
 "true"          { return yylval_token (TOK_TRUE);}
 "null"          { return yylval_token (TOK_NULL);}
-"ord"           { return yylval_token (TOK_ORD);}
-"chr"           { return yylval_token (TOK_CHR);}
 "new"           { return yylval_token (TOK_NEW);}
 "="             { return yylval_token ('='); }
 "+"             { return yylval_token ('+'); }
