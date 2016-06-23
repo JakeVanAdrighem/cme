@@ -1,2 +1,5 @@
 notes
 *.swp
+cme
+.ninja_deps
+.ninja_log

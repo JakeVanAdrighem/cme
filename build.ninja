@@ -1,0 +1,6 @@
+BUILD_FLAGS = -std=c11
+
+rule compile 
+  command = clang $BUILD_FLAGS $in -o $out
+
+build cme: compile main.c preprocessor.c
