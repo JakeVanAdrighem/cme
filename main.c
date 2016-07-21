@@ -1,9 +1,10 @@
-//Jake VanAdrighem
-//Driver for cme c compiler
+// Jake VanAdrighem
+// Driver for cme c compiler
 #include "cme.h"
 
 int main(int argc, char **argv) {
   if (argc < 2) {
+    DEBUG("Not enough args.");
     // throw error
   } else {
     Unit TU;
