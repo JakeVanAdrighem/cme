@@ -6,62 +6,56 @@
 // source multi-byte chars to our
 // implementation of them.
 bool phase1(Unit *TU){
-	ERROR("Phase 1 of preprocessor not implemented.");
-	return true;
+  if(!TU->cursor)
+	  ERROR("Phase 1 of preprocessor not implemented.");
+  ERROR("Phase 1 of preprocessor not implemented.");
+  return true;
 }
 
 // Phase 2. C11 N1570 5.1.1.2 p2
 bool phase2(Unit *TU) {
-  char *iter = TU->file;
-  while (*iter != EOF) {
-    // FIXME: If there is a '\' at the end
-    // of the file, won't this delete it?
-    if (*iter == '\\' && *(iter + 1) == '\n') {
-      // FIXME: This isn't really a good pattern.
-      // and is likely to end up happening all over
-      // the place during preprocessing. Something
-      // more generic and high level but still c-like
-      // would be great to have here. The same
-      // applies for the '\\n' check.
-      *iter = ' ';
-      *(iter + 1) = ' ';
+  while (!atEOF(TU)) {
+    if (look(TU) == '/') {
+      switch (peek(TU, 1)) {
+      // Single line comment.
+      case '/':
+        while (look(TU) != '\n') {
+          overwrite(TU, ' ');
+          advance(TU);
+        }
+        overwrite(TU, ' ');
+        advance(TU);
+        break;
+      // Multi-line comment.
+      case '*':
+        while (look(TU) != '*' && peek(TU, 1) != '/') {
+          overwrite(TU, ' ');
+          advance(TU);
+        }
+        overwriteTo(TU, ' ', 2);
+        advanceTo(TU, 2);
+        break;
+      }
+    } else {
+      advance(TU);
     }
-    iter++;
   }
+  // Reset the cursor to the beinning of the file
+  TU->cursor = TU->file;
   return true;
 }
 
 // Phase 3. C11 N1570 5.1.1.2 p3
 bool phase3(Unit *TU){
-	// Confirm the file ends in a newline
-	if(*(TU->file + (TU->size - 1)) != '\n'){
-		ERROR("File does not end in newline");
-		return false;
-	}
-	// Decompose into preprocessing tokens
-	char* iter = TU->file;
-	bool instring = false;
-	while(*iter != EOF){
-		if(*iter == '#' && !instring){
-			// Start of directive
-			// #include #pragma
-			// _Pragma TODO: Uggggghh
-			// #define #defined
-			// #if #elif #ifdef #ifndef #endif #undef
-			// # ## 
-			// #line #error
-		}
-		iter++;
-	}
+  if (*TU->end != '\n') {
+    ERROR("No newline at end of file.");
+    return false;
+  }
 	return true;
 }
 
-bool isMaybePreprocesserDirective(char* str){
-	return true;	
-}
-
 bool preprocessFile(Unit *TU){
-	bool success = false;
+  bool success = false;
 	// Phase 1
 	// success |= phase1(TU)
 
@@ -69,10 +63,25 @@ bool preprocessFile(Unit *TU){
 	success |= phase2(TU);
 
 	// Phase 3
-	success |= phase3(TU);
+	//success |= phase3(TU);
 	return success;
 }
 
-bool compress(Unit *TU){
-	return true;	
+bool compress(Unit *TU) {
+  while (!atEOF(TU)) {
+    if (look(TU) == ' ' && peek(TU, 1) == ' ') {
+      // Nice to compress >= 2 adjacent whitespaces to
+      // a single whitespace character.
+      // This function will need to either do some crazy
+      // shift of the entire memory mapped file or
+      // reallocate a full size worth and copy the things
+      // we want as "compression".
+    } else {
+      while (look(TU) == ' ')
+        advance(TU);
+      continue;
+    }
+    advance(TU);
+  }
+  return true;
 }

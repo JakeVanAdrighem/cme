@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
     }
 
     if (!preprocessFile(&TU)) {
+      DEBUG("Failed preprocessing file.");
       return 1;
     }
     // process cl options
