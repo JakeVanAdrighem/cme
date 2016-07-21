@@ -17,6 +17,13 @@ int main(int argc, char **argv) {
       DEBUG("Failed preprocessing file.");
       return 1;
     }
+
+    TokenBuffer *tokens;
+    tokens = lexFile(&TU);
+    if (tokens->count == 0) {
+      DEBUG("Failed lexing file.");
+      return 1;
+    }
     // process cl options
     // either use unistd.h for getopt or
     // create our own command line option
