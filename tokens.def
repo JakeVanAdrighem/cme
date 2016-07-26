@@ -1,6 +1,10 @@
 enum TOK_TYPE {
 // Preprocessor Tokens
 PTOK_IF,
+PTOK_ELSE,
+PTOK_ENDIF,
+PTOK_DEFINE,
+PTOK_INCLUDE,
 // Keywords
 TOK_FOR,
 TOK_WHILE,
@@ -13,32 +17,80 @@ TOK_GOTO,
 TOK_RETURN,
 TOK_INT,
 TOK_CHAR,
-TOK_BOOL,
+// TOK_BOOL,
 TOK_FLOAT,
+
+// Identifier
+TOK_IDENTIFIER,
+
 // String Literal
 TOK_STRING_LITERAL,
+
 // Integer constant
 TOK_INTEGER_CONSTANT,
+
 // Character contant
 TOK_CHARACTER_CONSTANT,
+
+// TODO: Support these alternative punctuators
+// <: :> <% %> %: %:%:
+
 //Punctuator Symbols
-TOK_LSQUARE,
-TOK_RSQUARE,
-TOK_LPAREN,
-TOK_RPAREN,
-TOK_LBRACE,
-TOK_RBRACE,
-TOK_DOT,
-TOK_INCREMENT,
-TOK_DECREMENT,
-TOK_DEREFERENCE,
-TOK_AMPERSAND,
-TOK_SEMICOLON,
-TOK_BANG,
-TOK_PIPE,
-TOK_PLUS,
-TOK_DASH,
-TOK_STAR,
-TOK_FORWARDSLASH,
-TOK_BACKSLASH,
+// [ ] ( ) { } . ->
+TOK_LSQUARE,     // [
+TOK_RSQUARE,     // ]
+TOK_LPAREN,      // (
+TOK_RPAREN,      // )
+TOK_LBRACE,      // {
+TOK_RBRACE,      // }
+TOK_DOT,         // .
+TOK_ARROW,       // ->
+
+// ++ -- & * + - ~ !
+TOK_INCREMENT,   // ++
+TOK_DECREMENT,   // --
+TOK_AMPERSAND,   // &
+TOK_DEREFERENCE, // *
+TOK_PLUS,        // +
+TOK_MINUS,       // -
+TOK_TILDA,       // ~
+TOK_BANG,        // !
+
+// / % << >> < > <= >= == != ^ | && || ? : ; ...
+TOK_FORWARDSLASH, // /
+TOK_PERCENT,      // %
+TOK_LSHIFT,       // <<
+TOK_RSHIFT,       // >>
+TOK_LANGLE,       // <
+TOK_RANGLE,       // >
+TOK_LEQ,          // <=
+TOK_GEQ,          // >=
+TOK_EQ,           // ==
+TOK_NEQ,          // !=
+TOK_BITWISE_NOT,  // ^
+TOK_BITWISE_OR,   // |
+TOK_AND,          // &&
+TOK_OR,           // ||
+TOK_QMARK,        // ?
+TOK_COLON,        // :
+TOK_SEMICOLON,    // ;
+TOK_ELIPSES,      // ...
+
+// = *= /= %= += -= <<= >>= &= ^= |=
+TOK_ASSIGNMENT,       // =
+TOK_TIMES_EQ,         // *=
+TOK_DIVIDE_EQ,        // /=
+TOK_MODULO_EQ,        // %=
+TOK_PLUS_EQ,          // +=
+TOK_MINUS_EQ,         // -=
+TOK_LSHIFT_EQ,        // <<=
+TOK_RSHIFT_EQ,        // >>=
+TOK_AND_EQ,           // &=
+TOK_NOT_EQ,           // ^=
+TOK_OR_EQ,            // |=
+
+// , # ##
+TOK_COMMA,      // ,
+TOK_HASH,       // #
+TOK_DOUBLE_HASH // ##
 };

@@ -29,12 +29,12 @@ struct Unit {
 
 struct Token {
   enum TOK_TYPE type;
-  char *value;
+  void *value;
 };
-
 // C11 6.2.3 p1
 typedef struct Unit Unit;
 typedef struct Token Token;
+typedef enum TOK_TYPE TOK_TYPE;
 typedef struct TokenBuffer TokenBuffer;
 
 struct TokenBuffer {
