@@ -246,6 +246,15 @@ static Token *isMaybePunctuator(Unit *TU) {
   return NULL;
 }
 
+bool actuallyKeyword(Unit *TU, char* str) {
+  if (!strncmp(TU->cursor, str, strlen(str)) &&
+      !isIdentifierValue(peek(TU, strlen(str)))) {
+    advanceTo(TU, strlen(str));
+    return true;
+  }
+  return false;
+}
+
 // FIXME: Ensure that the keyword we've found
 // isn't simply a prefix of an identifier in
 // a general way. Currently we have to check
@@ -253,44 +262,17 @@ static Token *isMaybePunctuator(Unit *TU) {
 // FIXME: Implement all keywords. Otherwise
 // they end up as identifiers.
 static Token *isMaybeKeyword(Unit *TU) {
-  switch (look(TU)) {
-  case 'i':
-    // Zero if lhs and rhs compare equal.
-    if (!strncmp(TU->cursor, "if", 2)) {
-      if(isIdentifierValue(peek(TU, 2)))
-        return NULL;
-      advanceTo(TU, 2);
-      return CREATE_TOKEN(TOK_IF);
-    }
-    else if (!strncmp(TU->cursor, "int", 3)){
-      if(isIdentifierValue(peek(TU, 3)))
-        return NULL;
-      advanceTo(TU, 3);
-      return CREATE_TOKEN(TOK_INT);
-    }
-  case 'c':
-    if (!strncmp(TU->cursor, "char", 4)){
-      if(isIdentifierValue(peek(TU, 4)))
-        return NULL;
-      advanceTo(TU, 4);
-      return CREATE_TOKEN(TOK_CHAR);
-    }
-  case 'r':
-    if (!strncmp(TU->cursor, "return", 6)) {
-      if (isIdentifierValue(peek(TU, 6)))
-        return NULL;
-      advanceTo(TU, 6);
-      return CREATE_TOKEN(TOK_RETURN);
-    }
-  case 'f':
-    if (!strncmp(TU->cursor, "for", 3)) {
-      if (isIdentifierValue(peek(TU, 3)))
-        return NULL;
-      advanceTo(TU, 3);
-      return CREATE_TOKEN(TOK_RETURN);
-    }
-  default:
-    return NULL;
+  // Zero if lhs and rhs compare equal.
+  if (actuallyKeyword(TU, "if")) {
+    return CREATE_TOKEN(TOK_IF);
+  } else if (actuallyKeyword(TU, "int")) {
+    return CREATE_TOKEN(TOK_INT);
+  } else if (actuallyKeyword(TU, "char")) {
+    return CREATE_TOKEN(TOK_CHAR);
+  } else if (actuallyKeyword(TU, "return")) {
+    return CREATE_TOKEN(TOK_RETURN);
+  } else if (actuallyKeyword(TU, "for")) {
+    return CREATE_TOKEN(TOK_RETURN);
   }
   return NULL;
 }
