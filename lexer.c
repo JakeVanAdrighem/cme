@@ -91,15 +91,14 @@ static Token *isMaybeStringLiteral(Unit *TU) {
 }
 
 // TODO: Handle negative numbers
-static Token* isMaybeIntegerConstant(Unit* TU){
+static Token *isMaybeIntegerConstant(Unit *TU) {
   if (look(TU) >= '0' && look(TU) <= '9') {
     int *val = calloc(sizeof(int), 1);
+    (*val) = atoi(TU->cursor);
     while (look(TU) >= '0' && look(TU) <= '9') {
-      (*val) = (*val) + atoi(TU->cursor);
-      (*val) = (*val) << 2;
       advance(TU);
     }
-        Token* tok = CREATE_TOKEN(TOK_INTEGER_CONSTANT);
+    Token *tok = CREATE_TOKEN(TOK_INTEGER_CONSTANT);
     tok->value = val;
     return tok;
   }
