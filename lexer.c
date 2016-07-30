@@ -15,7 +15,7 @@ addTokenToBuffer(TokenBuffer *tokbuf, Token *tkn) {
     Token **tokens = tokbuf->tokens;
     // New buffer is sizeof(current_buffer) * 2
     int newbufsize = tokbuf->bufsize * 2;
-    Token **new_tokbuf = malloc(sizeof(TokenBuffer) * newbufsize);
+    Token **new_tokbuf = malloc(sizeof(Token*) * newbufsize);
     for(int i = 0; i < tokbuf->count; i++){
       new_tokbuf[i] = tokbuf->tokens[i];
     }
@@ -23,7 +23,7 @@ addTokenToBuffer(TokenBuffer *tokbuf, Token *tkn) {
     free(tokens);
     tokbuf->bufsize = newbufsize;
   }
-  tokbuf->tokens[tokbuf->count+1] = tkn;
+  tokbuf->tokens[tokbuf->count] = tkn;
   tokbuf->count += 1;
   return true;
 }
@@ -35,9 +35,11 @@ static void skipWhitespace(Unit *TU){
 }
 
 TokenBuffer* lexFile(Unit *TU){
-  TokenBuffer* tokbuf = malloc(sizeof(TokenBuffer));
-  tokbuf->tokens = malloc(sizeof(Token) * 1024);
+  TokenBuffer* tokbuf = calloc(sizeof(TokenBuffer), 1);
+  int numtokens = 256;
+  tokbuf->tokens = calloc(sizeof(Token*), numtokens);
   tokbuf->count = 0;
+  tokbuf->bufsize = numtokens * sizeof(Token*);
   Token* tok;
   // Once before lexing and then
   // once each time after getting
