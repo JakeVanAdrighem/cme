@@ -278,18 +278,22 @@ static Token *isMaybeKeyword(Unit *TU) {
   return NULL;
 }
 
+// FIXME: Make this work correctly for cases like
+// this -> '\\'
 static Token *isMaybeCharacterConstant(Unit *TU) {
   Token* tok;
   char curChar = look(TU);
   if(curChar == '\''){
-    //char *cursorPtr = TU->cursor;
+    char *cursorPtr = TU->cursor;
     advance(TU);
-    int charlen = findNext(TU, '\'');
+    int charlen = findNext(TU, '\'') + 1;
     if(charlen == 0)
       ERROR("Incomplete character constant.");
     // Copy string from cursorPtr to
     // cursorPtr + charlen.
-    tok = malloc(sizeof(Token));
+    tok = calloc(sizeof(Token), 1);
+    tok->value = calloc(sizeof(char), charlen);
+    strncpy(tok->value, cursorPtr, charlen);
     tok->type = TOK_CHARACTER_CONSTANT;
     advance(TU);
     return tok;
