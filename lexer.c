@@ -127,8 +127,8 @@ static Token *isMaybeIdentifier(Unit *TU) {
     while (isIdentifierValue(peek(TU, peekCount))) {
       peekCount++;
     }
-    // FIXME: This is stupid.
-    // Can't have an identifier that's just a single underscore.
+    // FIXME: This is stupid. But we can't
+    // have an identifier that's just a single underscore.
     if (peekCount == 1 && look(TU) == '_')
       return NULL;
     // Allocate + 1 so we have space for '\0'
@@ -142,109 +142,87 @@ static Token *isMaybeIdentifier(Unit *TU) {
   return NULL;
 }
 
+bool actuallyPunctuator(Unit *TU, char *str) {
+  if (!strncmp(TU->cursor, str, strlen(str))) {
+    advanceTo(TU, strlen(str));
+    return true;
+  }
+  return false;
+}
+
 static Token *isMaybePunctuator(Unit *TU) {
   Token *tok = NULL;
   switch (look(TU)) {
   case '+':
-    if (peek(TU, 1) == '+') {
-            tok = CREATE_TOKEN(TOK_INCREMENT);
-      advanceTo(TU, 2);
-      return tok;
-    } else if (peek(TU, 1) == '=') {
-            tok = CREATE_TOKEN(TOK_PLUS_EQ);
-      advanceTo(TU, 2);
-      return tok;
+    if (actuallyPunctuator(TU, "++")) {
+      tok = CREATE_TOKEN(TOK_INCREMENT);
+    } else if (actuallyPunctuator(TU, "+=")) {
+      tok = CREATE_TOKEN(TOK_PLUS_EQ);
     } else {
-            tok = CREATE_TOKEN(TOK_PLUS);
+      tok = CREATE_TOKEN(TOK_PLUS);
       advance(TU);
-      return tok;
     }
   case '-':
-    if (peek(TU, 1) == '-') {
+    if (actuallyPunctuator(TU, "--")) {
       tok = CREATE_TOKEN(TOK_DECREMENT);
-      advanceTo(TU, 2);
-      return tok;
-    } else if (peek(TU, 1) == '=') {
+    } else if (actuallyPunctuator(TU, "-=")) {
       tok = CREATE_TOKEN(TOK_MINUS_EQ);
-      advanceTo(TU, 2);
-      return tok;
-    } else if (peek(TU, 1) == '>'){
-            tok = CREATE_TOKEN(TOK_ARROW);
-      advanceTo(TU, 2);
-      return tok;
+    } else if (actuallyPunctuator(TU, "->")) {
+      tok = CREATE_TOKEN(TOK_ARROW);
     } else {
-            tok = CREATE_TOKEN(TOK_MINUS_EQ);
+      tok = CREATE_TOKEN(TOK_MINUS_EQ);
       advance(TU);
-      return tok;
     }
   case '*':
-    if (peek(TU, 1) == '=') {
-            tok = CREATE_TOKEN(TOK_TIMES_EQ);
-      advanceTo(TU, 2);
-      return tok;
+    if (actuallyPunctuator(TU, "*=")) {
+      tok = CREATE_TOKEN(TOK_TIMES_EQ);
     } else {
-            tok = CREATE_TOKEN(TOK_DEREFERENCE);
+      tok = CREATE_TOKEN(TOK_DEREFERENCE);
       advance(TU);
-      return tok;
     }
   case '!':
-    if(peek(TU, 1) == '='){
-    tok = CREATE_TOKEN(TOK_NEQ);
-    advanceTo(TU, 2);
-    return tok;
-  } else {
-    tok = CREATE_TOKEN(TOK_BANG);
-    advance(TU);
-    return tok;
-  }
+    if (actuallyPunctuator(TU, "!=")) {
+      tok = CREATE_TOKEN(TOK_NEQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_BANG);
+      advance(TU);
+    }
   case '=':
-    if (peek(TU, 1) == '=') {
+    if (actuallyPunctuator(TU, "==")) {
       tok = CREATE_TOKEN(TOK_EQ);
-      advanceTo(TU, 2);
-      return tok;
     } else {
       tok = CREATE_TOKEN(TOK_ASSIGNMENT);
       advance(TU);
-      return tok;
     }
-  case '[':
-    tok = CREATE_TOKEN(TOK_LSQUARE);
-    advance(TU);
-    return tok;
-  case ']':
-    tok = CREATE_TOKEN(TOK_RSQUARE);
-    advance(TU);
-    return tok;
-  case '(':
-    tok = CREATE_TOKEN(TOK_LPAREN);
-    advance(TU);
-    return tok;
-   case ')':
-    tok = CREATE_TOKEN(TOK_RPAREN);
-    advance(TU);
-    return tok;
-   case '<':
-    tok = CREATE_TOKEN(TOK_LANGLE);
-    advance(TU);
-    return tok;
-   case '>':
-    tok = CREATE_TOKEN(TOK_RANGLE);
-    advance(TU);
-    return tok;
-  case '{':
-    tok = CREATE_TOKEN(TOK_LBRACE);
-    advance(TU);
-    return tok;
-  case '}':
-    tok = CREATE_TOKEN(TOK_RBRACE);
-    advance(TU);
-    return tok;
-  case ';':
-    tok = CREATE_TOKEN(TOK_SEMICOLON);
-    advance(TU);
-    return tok;
   }
-  return NULL;
+
+  if (tok)
+    return tok;
+  else if (actuallyPunctuator(TU, "["))
+    tok = CREATE_TOKEN(TOK_LSQUARE);
+  else if (actuallyPunctuator(TU, "]"))
+    tok = CREATE_TOKEN(TOK_RSQUARE);
+  else if (actuallyPunctuator(TU, "("))
+    tok = CREATE_TOKEN(TOK_LPAREN);
+  else if (actuallyPunctuator(TU, ")"))
+    tok = CREATE_TOKEN(TOK_RPAREN);
+  else if (actuallyPunctuator(TU, "<"))
+    tok = CREATE_TOKEN(TOK_LANGLE);
+  else if (actuallyPunctuator(TU, ">"))
+    tok = CREATE_TOKEN(TOK_RANGLE);
+  else if (actuallyPunctuator(TU, "{"))
+    tok = CREATE_TOKEN(TOK_LBRACE);
+  else if (actuallyPunctuator(TU, "}"))
+    tok = CREATE_TOKEN(TOK_RBRACE);
+  else if (actuallyPunctuator(TU, ";"))
+    tok = CREATE_TOKEN(TOK_SEMICOLON);
+  else if (actuallyPunctuator(TU, "%"))
+    tok = CREATE_TOKEN(TOK_PERCENT);
+  else if (actuallyPunctuator(TU, "."))
+    tok = CREATE_TOKEN(TOK_DOT);
+  else
+    return NULL;
+  return tok;
 }
 
 bool actuallyKeyword(Unit *TU, char* str) {
@@ -270,10 +248,26 @@ static Token *isMaybeKeyword(Unit *TU) {
     return CREATE_TOKEN(TOK_INT);
   } else if (actuallyKeyword(TU, "char")) {
     return CREATE_TOKEN(TOK_CHAR);
+  } else if (actuallyKeyword(TU, "do")) {
+    return CREATE_TOKEN(TOK_DO);
   } else if (actuallyKeyword(TU, "return")) {
     return CREATE_TOKEN(TOK_RETURN);
   } else if (actuallyKeyword(TU, "for")) {
-    return CREATE_TOKEN(TOK_RETURN);
+    return CREATE_TOKEN(TOK_FOR);
+  } else if (actuallyKeyword(TU, "while")) {
+    return CREATE_TOKEN(TOK_WHILE);
+  } else if (actuallyKeyword(TU, "else")) {
+    return CREATE_TOKEN(TOK_ELSE);
+  } else if (actuallyKeyword(TU, "static")) {
+    return CREATE_TOKEN(TOK_STATIC);
+  } else if (actuallyKeyword(TU, "struct")) {
+    return CREATE_TOKEN(TOK_STRUCT);
+  } else if (actuallyKeyword(TU, "extern")) {
+    return CREATE_TOKEN(TOK_EXTERN);
+  } else if (actuallyKeyword(TU, "long")) {
+    return CREATE_TOKEN(TOK_LONG);
+  } else if (actuallyKeyword(TU, "inline")) {
+    return CREATE_TOKEN(TOK_INLINE);
   }
   return NULL;
 }
@@ -318,6 +312,5 @@ Token* getToken(Unit *TU) {
   if((tkn = isMaybeIdentifier(TU)))
     return tkn;
   STRERROR("Lexer failure", TU->cursor);
-  printf("Cursor: %p, End: %p\n", TU->cursor, TU->end);
   return NULL;
 }
