@@ -19,14 +19,17 @@ char peek(Unit *TU, int offset){
   return *(TU->cursor + offset);
 }
 
-// Find the next instance of chr
+// Find the next non-escaped instance of chr
 // in the stream.
+// FIXME: This fucks up on simple cases: '\\'
 int findNext(Unit *TU, char chr){
   int pos = 0;
   while(!atEOF(TU)){
-    pos++;    
-    if(look(TU) == chr)
+    pos++;
+    if (look(TU) == chr && peek(TU, -1) != '\\') {
+      advance(TU);
       return pos;
+    }
     advance(TU);
   }
   return 0;
