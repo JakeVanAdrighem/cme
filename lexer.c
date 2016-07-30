@@ -77,14 +77,14 @@ static Token* isMaybePreprocessorToken(Unit *TU){
 static Token *isMaybeStringLiteral(Unit *TU) {
   if (look(TU) == '"') {
     advance(TU);
-    // char* cursorPtr = TU->cursor;
+    char* strHeadPtr = TU->cursor;
     int strlen = findNext(TU, '"');
     if (strlen == 0)
       ERROR("Incomplete String Literal");
     Token *tok = CREATE_TOKEN(TOK_STRING_LITERAL);
     // Copy string value
-    // tok->value = ...
-    advance(TU);
+    tok->value = calloc(sizeof(char), strlen + 1);
+    strncpy(tok->value, strHeadPtr, strlen);
     return tok;
   }
   return NULL;
