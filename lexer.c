@@ -34,18 +34,24 @@ static void skipWhitespace(Unit *TU){
   }
 }
 
+// Allocates a TokenBuffer and then
+// moves to EOF while asking for tokens.
+// This function will not fail, it
+// expects that other parts of the lexer
+// will ERROR loudly when something
+// goes wrong.
 TokenBuffer* lexFile(Unit *TU){
+  // Initial allocation of TokenBuffer.
   TokenBuffer* tokbuf = calloc(sizeof(TokenBuffer), 1);
   int numtokens = 256;
   tokbuf->tokens = calloc(sizeof(Token*), numtokens);
   tokbuf->count = 0;
   tokbuf->bufsize = numtokens * sizeof(Token*);
-  Token* tok;
-  // Once before lexing and then
-  // once each time after getting
-  // a token.
+  // Skip whitespace once before lexing and then
+  // once each time after getting a token.
   skipWhitespace(TU);
   DEBUG("Lexing...");
+  Token* tok;
   while (!atEOF(TU)) {
     tok = getToken(TU);
     if(tok)
