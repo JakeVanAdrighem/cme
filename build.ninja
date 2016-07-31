@@ -1,8 +1,8 @@
-BUILD_FLAGS = -O3 -std=c11 -Wall -Wextra -Werror
+BUILD_FLAGS = -O3 -std=c11 -Wall -Wextra -Werror -DDEBUG_PRINTING
 
 BUILD_FILES = 
 
 rule compile 
   command = clang $BUILD_FLAGS $in -o $out
 
-build cme: compile main.c preprocessor.c cursor.c file.c lexer.c
+build cme: compile main.c preprocessor.c tu_cursor.c file.c lexer.c

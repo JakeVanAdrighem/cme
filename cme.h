@@ -12,9 +12,14 @@
 
 #define STRERROR(msg, args) printf("Error - %s: %s\n", msg, args)
 
+#ifdef DEBUG_PRINTING
 #define DEBUG(msg) printf("%s\n", msg)
-
 #define STRDEBUG(msg, args) printf("%s%s\n", msg, args)
+#else
+#define DEBUG(msg) (void)msg
+#define STRDEBUG(msg, args) (void)msg;(void)args
+#endif /* DEBUG_PRINTING */
+
 
 // Token type enumeration
 #include "tokens.def"
