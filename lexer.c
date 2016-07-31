@@ -162,6 +162,7 @@ static Token *isMaybePunctuator(Unit *TU) {
       tok = CREATE_TOKEN(TOK_PLUS);
       advance(TU);
     }
+    break;
   case '-':
     if (actuallyPunctuator(TU, "--")) {
       tok = CREATE_TOKEN(TOK_DECREMENT);
@@ -173,6 +174,7 @@ static Token *isMaybePunctuator(Unit *TU) {
       tok = CREATE_TOKEN(TOK_MINUS_EQ);
       advance(TU);
     }
+    break;
   case '*':
     if (actuallyPunctuator(TU, "*=")) {
       tok = CREATE_TOKEN(TOK_TIMES_EQ);
@@ -180,6 +182,15 @@ static Token *isMaybePunctuator(Unit *TU) {
       tok = CREATE_TOKEN(TOK_DEREFERENCE);
       advance(TU);
     }
+    break;
+  case '/':
+    if (actuallyPunctuator(TU, "/=")) {
+      tok = CREATE_TOKEN(TOK_DIVIDE_EQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_DIVIDE);
+      advance(TU);
+    }
+    break;
   case '!':
     if (actuallyPunctuator(TU, "!=")) {
       tok = CREATE_TOKEN(TOK_NEQ);
@@ -187,6 +198,7 @@ static Token *isMaybePunctuator(Unit *TU) {
       tok = CREATE_TOKEN(TOK_BANG);
       advance(TU);
     }
+    break;
   case '=':
     if (actuallyPunctuator(TU, "==")) {
       tok = CREATE_TOKEN(TOK_EQ);
@@ -194,6 +206,67 @@ static Token *isMaybePunctuator(Unit *TU) {
       tok = CREATE_TOKEN(TOK_ASSIGNMENT);
       advance(TU);
     }
+    break;
+  case '%':
+    if (actuallyPunctuator(TU, "%=")){
+      tok = CREATE_TOKEN(TOK_MODULO_EQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_PERCENT);
+      advance(TU);
+    }
+    break;
+  case '<':
+    if (actuallyPunctuator(TU, "<<=")) {
+      tok = CREATE_TOKEN(TOK_LSHIFT_EQ);
+    } else if (actuallyPunctuator(TU, "<<")) {
+      tok = CREATE_TOKEN(TOK_LSHIFT);
+    } else if (actuallyPunctuator(TU, "<=")) {
+      tok = CREATE_TOKEN(TOK_LEQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_LANGLE);
+      advance(TU);
+    }
+    break;
+  case '>':
+    if (actuallyPunctuator(TU, ">>=")) {
+      tok = CREATE_TOKEN(TOK_RSHIFT_EQ);
+    } else if (actuallyPunctuator(TU, ">>")) {
+      tok = CREATE_TOKEN(TOK_RSHIFT);
+    } else if (actuallyPunctuator(TU, ">=")) {
+      tok = CREATE_TOKEN(TOK_GEQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_RANGLE);
+      advance(TU);
+    }
+    break;
+  case '&':
+    if (actuallyPunctuator(TU, "&=")) {
+      tok = CREATE_TOKEN(TOK_BITWISE_AND_EQ);
+    } else if (actuallyPunctuator(TU, "&&")) {
+      tok = CREATE_TOKEN(TOK_AND);
+    } else {
+      tok = CREATE_TOKEN(TOK_AMPERSAND);
+      advance(TU);
+    }
+    break;
+  case '^':
+    if (actuallyPunctuator(TU, "^=")) {
+      tok = CREATE_TOKEN(TOK_BITWISE_NOT_EQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_BITWISE_NOT);
+      advance(TU);
+    }
+    break;
+  case '|':
+    if (actuallyPunctuator(TU, "||")) {
+      tok = CREATE_TOKEN(TOK_OR);
+    } else if (actuallyPunctuator(TU, "|=")) {
+      tok = CREATE_TOKEN(TOK_BITWISE_OR_EQ);
+    } else {
+      tok = CREATE_TOKEN(TOK_BITWISE_OR);
+      advance(TU);
+    }
+    break;
   }
 
   if (tok)
@@ -206,20 +279,24 @@ static Token *isMaybePunctuator(Unit *TU) {
     tok = CREATE_TOKEN(TOK_LPAREN);
   else if (actuallyPunctuator(TU, ")"))
     tok = CREATE_TOKEN(TOK_RPAREN);
-  else if (actuallyPunctuator(TU, "<"))
-    tok = CREATE_TOKEN(TOK_LANGLE);
-  else if (actuallyPunctuator(TU, ">"))
-    tok = CREATE_TOKEN(TOK_RANGLE);
   else if (actuallyPunctuator(TU, "{"))
     tok = CREATE_TOKEN(TOK_LBRACE);
   else if (actuallyPunctuator(TU, "}"))
     tok = CREATE_TOKEN(TOK_RBRACE);
-  else if (actuallyPunctuator(TU, ";"))
-    tok = CREATE_TOKEN(TOK_SEMICOLON);
-  else if (actuallyPunctuator(TU, "%"))
-    tok = CREATE_TOKEN(TOK_PERCENT);
   else if (actuallyPunctuator(TU, "."))
     tok = CREATE_TOKEN(TOK_DOT);
+  else if (actuallyPunctuator(TU, ";"))
+    tok = CREATE_TOKEN(TOK_SEMICOLON);
+  else if (actuallyPunctuator(TU, ":"))
+    tok = CREATE_TOKEN(TOK_COLON);
+  else if (actuallyPunctuator(TU, "..."))
+    tok = CREATE_TOKEN(TOK_ELIPSES);
+  else if (actuallyPunctuator(TU, "~"))
+    tok = CREATE_TOKEN(TOK_TILDA);
+  else if (actuallyPunctuator(TU, "?"))
+    tok = CREATE_TOKEN(TOK_QMARK);
+  else if (actuallyPunctuator(TU, ","))
+    tok = CREATE_TOKEN(TOK_COMMA);
   else
     return NULL;
   return tok;
