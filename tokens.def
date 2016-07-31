@@ -5,6 +5,7 @@ PTOK_ELSE,
 PTOK_ENDIF,
 PTOK_IF,
 PTOK_INCLUDE,
+
 // Keywords
 TOK_CHAR,
 TOK_DO,
@@ -61,7 +62,7 @@ TOK_TILDA,       // ~
 TOK_BANG,        // !
 
 // / % << >> < > <= >= == != ^ | && || ? : ; ...
-TOK_FORWARDSLASH, // /
+TOK_DIVIDE,       // /
 TOK_PERCENT,      // %
 TOK_LSHIFT,       // <<
 TOK_RSHIFT,       // >>
@@ -89,9 +90,9 @@ TOK_PLUS_EQ,          // +=
 TOK_MINUS_EQ,         // -=
 TOK_LSHIFT_EQ,        // <<=
 TOK_RSHIFT_EQ,        // >>=
-TOK_AND_EQ,           // &=
-TOK_NOT_EQ,           // ^=
-TOK_OR_EQ,            // |=
+TOK_BITWISE_AND_EQ,   // &=
+TOK_BITWISE_NOT_EQ,   // ^=
+TOK_BITWISE_OR_EQ,    // |=
 
 // , # ##
 TOK_COMMA,      // ,
