@@ -36,17 +36,19 @@ struct Token {
   enum TOK_TYPE type;
   void *value;
 };
-// C11 6.2.3 p1
-typedef struct Unit Unit;
-typedef struct Token Token;
-typedef enum TOK_TYPE TOK_TYPE;
-typedef struct TokenBuffer TokenBuffer;
 
 struct TokenBuffer {
   Token **tokens;
   int bufsize;
   int count;
+  Token* cursor;
 };
+
+// C11 6.2.3 p1
+typedef struct Unit Unit;
+typedef struct Token Token;
+typedef enum TOK_TYPE TOK_TYPE;
+typedef struct TokenBuffer TokenBuffer;
 
 // file.c
 bool loadFile(char *, Unit *);
