@@ -1,7 +1,10 @@
-cme is a toy c compiler.
+cme is a toy c compiler. This projects primary purpose is to explore the
+space of fundamental compiler features. There is no timeline and progress
+is made only when least expected.
 
 Command line options:
-☐ -o
+☐ -o  |Output Path/Filename
+
 
 Basic functionality checklist
 ☑ lexer
